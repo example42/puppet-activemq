@@ -438,4 +438,10 @@ class activemq (
     }
   }
 
+  ### Include OS specific dependencies
+  case $::operatingsystem {
+    'centos','redhat','scientific': { require yum::repo::puppetlabs }
+    default: {}
+  }
+
 }

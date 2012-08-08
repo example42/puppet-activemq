@@ -14,6 +14,9 @@ This module requires functions provided by the Example42 Puppi module (you need 
 
 For detailed info about the logic and usage patterns of Example42 modules check the DOCS directory on Example42 main modules set.
 
+This module is based on ActiveMQ packages provided by the PuppetLabs repository.
+For RedHat derivatives it requires Example42's yum module (or at least yum/manifests/repo/puppetlabs.pp).
+
 == USAGE - Basic management
 
 * Install activemq with default settings

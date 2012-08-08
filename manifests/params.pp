@@ -29,11 +29,11 @@ class activemq::params {
   }
 
   $process = $::operatingsystem ? {
-    default => 'activemq',
+    default => 'java',
   }
 
   $process_args = $::operatingsystem ? {
-    default => '',
+    default => 'activemq',
   }
 
   $process_user = $::operatingsystem ? {
@@ -49,7 +49,7 @@ class activemq::params {
   }
 
   $config_file_mode = $::operatingsystem ? {
-    default => '0644',
+    default => '0755',
   }
 
   $config_file_owner = $::operatingsystem ? {
@@ -81,7 +81,7 @@ class activemq::params {
     default => '/var/log/activemq/activemq.log',
   }
 
-  $port = '6163'
+  $port = '8161'
   $protocol = 'tcp'
 
   # General Settings
