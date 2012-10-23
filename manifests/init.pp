@@ -441,6 +441,13 @@ class activemq (
   ### Include OS specific dependencies
   case $::operatingsystem {
     'centos','redhat','scientific': { require yum::repo::puppetlabs }
+    'ubuntu': { 
+      file { 'activemq_instance_enabled':
+        path    => "${activemq::config_dir}/instances-enabled/main",
+        ensure  => "${activemq::config_dir}/instances-available/main",
+        require => File['activemq.conf'],
+      }
+    }
     default: {}
   }
 

@@ -45,7 +45,8 @@ class activemq::params {
   }
 
   $config_file = $::operatingsystem ? {
-    default => '/etc/activemq/activemq.xml',
+    'ubuntu' => '/etc/activemq/instances-available/main/activemq.xml',
+    default  => '/etc/activemq/activemq.xml',
   }
 
   $config_file_mode = $::operatingsystem ? {
