@@ -5,6 +5,14 @@
 #
 # == Parameters
 #
+# Module Specific variables
+# [*install_dependencies*]
+#   If dependencies from other Example42 modules are used. 
+#   Note that these dependencies are needed for an out of the box
+#   setup of the module, but you might want to provide them with
+#   other modules or functions. Default: true.
+#   Set to false if these dependencies interphere with your modules.
+#
 # Standard class parameters
 # Define the general class behaviour and customizations
 #
@@ -205,48 +213,50 @@
 #   Alessandro Franceschi <al@lab42.it/>
 #
 class activemq (
-  $my_class            = params_lookup( 'my_class' ),
-  $source              = params_lookup( 'source' ),
-  $source_dir          = params_lookup( 'source_dir' ),
-  $source_dir_purge    = params_lookup( 'source_dir_purge' ),
-  $template            = params_lookup( 'template' ),
-  $service_autorestart = params_lookup( 'service_autorestart' , 'global' ),
-  $options             = params_lookup( 'options' ),
-  $version             = params_lookup( 'version' ),
-  $absent              = params_lookup( 'absent' ),
-  $disable             = params_lookup( 'disable' ),
-  $disableboot         = params_lookup( 'disableboot' ),
-  $monitor             = params_lookup( 'monitor' , 'global' ),
-  $monitor_tool        = params_lookup( 'monitor_tool' , 'global' ),
-  $monitor_target      = params_lookup( 'monitor_target' , 'global' ),
-  $puppi               = params_lookup( 'puppi' , 'global' ),
-  $puppi_helper        = params_lookup( 'puppi_helper' , 'global' ),
-  $firewall            = params_lookup( 'firewall' , 'global' ),
-  $firewall_tool       = params_lookup( 'firewall_tool' , 'global' ),
-  $firewall_src        = params_lookup( 'firewall_src' , 'global' ),
-  $firewall_dst        = params_lookup( 'firewall_dst' , 'global' ),
-  $debug               = params_lookup( 'debug' , 'global' ),
-  $audit_only          = params_lookup( 'audit_only' , 'global' ),
-  $package             = params_lookup( 'package' ),
-  $service             = params_lookup( 'service' ),
-  $service_status      = params_lookup( 'service_status' ),
-  $process             = params_lookup( 'process' ),
-  $process_args        = params_lookup( 'process_args' ),
-  $process_user        = params_lookup( 'process_user' ),
-  $config_dir          = params_lookup( 'config_dir' ),
-  $config_file         = params_lookup( 'config_file' ),
-  $config_file_mode    = params_lookup( 'config_file_mode' ),
-  $config_file_owner   = params_lookup( 'config_file_owner' ),
-  $config_file_group   = params_lookup( 'config_file_group' ),
-  $config_file_init    = params_lookup( 'config_file_init' ),
-  $pid_file            = params_lookup( 'pid_file' ),
-  $data_dir            = params_lookup( 'data_dir' ),
-  $log_dir             = params_lookup( 'log_dir' ),
-  $log_file            = params_lookup( 'log_file' ),
-  $port                = params_lookup( 'port' ),
-  $protocol            = params_lookup( 'protocol' )
+  $install_dependencies = params_lookup( 'install_dependencies' ),
+  $my_class             = params_lookup( 'my_class' ),
+  $source               = params_lookup( 'source' ),
+  $source_dir           = params_lookup( 'source_dir' ),
+  $source_dir_purge     = params_lookup( 'source_dir_purge' ),
+  $template             = params_lookup( 'template' ),
+  $service_autorestart  = params_lookup( 'service_autorestart' , 'global' ),
+  $options              = params_lookup( 'options' ),
+  $version              = params_lookup( 'version' ),
+  $absent               = params_lookup( 'absent' ),
+  $disable              = params_lookup( 'disable' ),
+  $disableboot          = params_lookup( 'disableboot' ),
+  $monitor              = params_lookup( 'monitor' , 'global' ),
+  $monitor_tool         = params_lookup( 'monitor_tool' , 'global' ),
+  $monitor_target       = params_lookup( 'monitor_target' , 'global' ),
+  $puppi                = params_lookup( 'puppi' , 'global' ),
+  $puppi_helper         = params_lookup( 'puppi_helper' , 'global' ),
+  $firewall             = params_lookup( 'firewall' , 'global' ),
+  $firewall_tool        = params_lookup( 'firewall_tool' , 'global' ),
+  $firewall_src         = params_lookup( 'firewall_src' , 'global' ),
+  $firewall_dst         = params_lookup( 'firewall_dst' , 'global' ),
+  $debug                = params_lookup( 'debug' , 'global' ),
+  $audit_only           = params_lookup( 'audit_only' , 'global' ),
+  $package              = params_lookup( 'package' ),
+  $service              = params_lookup( 'service' ),
+  $service_status       = params_lookup( 'service_status' ),
+  $process              = params_lookup( 'process' ),
+  $process_args         = params_lookup( 'process_args' ),
+  $process_user         = params_lookup( 'process_user' ),
+  $config_dir           = params_lookup( 'config_dir' ),
+  $config_file          = params_lookup( 'config_file' ),
+  $config_file_mode     = params_lookup( 'config_file_mode' ),
+  $config_file_owner    = params_lookup( 'config_file_owner' ),
+  $config_file_group    = params_lookup( 'config_file_group' ),
+  $config_file_init     = params_lookup( 'config_file_init' ),
+  $pid_file             = params_lookup( 'pid_file' ),
+  $data_dir             = params_lookup( 'data_dir' ),
+  $log_dir              = params_lookup( 'log_dir' ),
+  $log_file             = params_lookup( 'log_file' ),
+  $port                 = params_lookup( 'port' ),
+  $protocol             = params_lookup( 'protocol' )
   ) inherits activemq::params {
 
+  $bool_install_dependencies =any2bool($install_dependencies )
   $bool_source_dir_purge=any2bool($source_dir_purge)
   $bool_service_autorestart=any2bool($service_autorestart)
   $bool_absent=any2bool($absent)
@@ -438,9 +448,13 @@ class activemq (
     }
   }
 
+  ### Include dependencies provided by other Example42 modules
+  if $bool_install_dependencies {
+    require activemq::dependencies
+  }
+
   ### Include OS specific dependencies
   case $::operatingsystem {
-    'centos','redhat','scientific': { require yum::repo::puppetlabs }
     'ubuntu': { 
       file { 'activemq_instance_enabled':
         path    => "${activemq::config_dir}/instances-enabled/main",

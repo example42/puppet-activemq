@@ -14,6 +14,9 @@
 #
 class activemq::params {
 
+  ### Module specific variables
+  $install_dependencies = true
+
   ### Application related parameters
 
   $package = $::operatingsystem ? {

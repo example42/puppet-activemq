@@ -23,6 +23,12 @@ For RedHat derivatives it requires Example42's yum module (or at least yum/manif
 
         class { 'activemq': }
 
+* Install activemq without including the (needed) dependencies that rely on other Example42 modules. When you set install_dependencies to false you need to provide in some way the equivant of what is placed in activemq/manifests/dependencies.pp
+
+        class { 'activemq':
+          install_dependencies => false,
+        }
+
 * Install a specific version of activemq package
 
         class { 'activemq':
