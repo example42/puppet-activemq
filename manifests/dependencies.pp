@@ -18,6 +18,9 @@ class activemq::dependencies {
     'centos','redhat','scientific': {
       require yum::repo::puppetlabs
     }
+    /(?i:Debian|Ubuntu|Mint)/ : {
+      require apt::repo::puppetlabs
+    }
     default: {}
   }
 
