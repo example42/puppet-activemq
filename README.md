@@ -1,4 +1,4 @@
-= Puppet module: activemq
+# Puppet module: activemq
 
 This is a Puppet module for activemq based on the second generation layout ("NextGen") of Example42 Puppet Modules.
 
@@ -17,7 +17,7 @@ For detailed info about the logic and usage patterns of Example42 modules check 
 This module is based on ActiveMQ packages provided by the PuppetLabs repository.
 For RedHat derivatives it requires Example42's yum module (or at least yum/manifests/repo/puppetlabs.pp).
 
-== USAGE - Basic management
+## USAGE - Basic management
 
 * Install activemq with default settings
 
@@ -54,7 +54,7 @@ For RedHat derivatives it requires Example42's yum module (or at least yum/manif
         }
 
 
-== USAGE - Overrides and Customizations
+## USAGE - Overrides and Customizations
 * Use custom sources for main config file 
 
         class { 'activemq':
@@ -82,7 +82,7 @@ For RedHat derivatives it requires Example42's yum module (or at least yum/manif
         }
 
 
-== USAGE - Example42 extensions management 
+## USAGE - Example42 extensions management 
 * Activate puppi (recommended, but disabled by default)
 
         class { 'activemq':
