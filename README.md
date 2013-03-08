@@ -112,3 +112,5 @@ For RedHat derivatives it requires Example42's yum module (or at least yum/manif
           firewall_dst  => $ipaddress_eth0,
         }
 
+
+[![Build Status](https://travis-ci.org/example42/puppet-activemq.png?branch=master)](https://travis-ci.org/example42/puppet-activemq)
