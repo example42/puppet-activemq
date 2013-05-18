@@ -20,6 +20,7 @@ class activemq::params {
   $install_source = undef
   $install_destination = '/opt'
   $base_install_source = 'http://www.eu.apache.org/dist/activemq/apache-activemq'
+  $create_user = true
 
   ### Application related parameters
 

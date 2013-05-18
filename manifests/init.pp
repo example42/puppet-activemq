@@ -8,31 +8,36 @@
 # Module Specific variables
 # [*install*]
 #   Kind of installation to attempt:
-#     - package : Installs logstash using the OS common packages
-#     - source  : Installs logstash downloading and extracting a specific
+#     - package : Installs activemq using the OS common packages
+#     - source  : Installs activemq downloading and extracting a specific
 #                 tarball or zip file
-#     - puppi   : Installs logstash tarball or file via Puppi, creating the
-#                 "puppi deploy logstash" command
-#   Can be defined also by the variable $logstash_install
+#     - puppi   : Installs activemq tarball or file via Puppi, creating the
+#                 "puppi deploy activemq" command
+#   Can be defined also by the variable $activemq_install
 #
 #
 # [*install_source*]
 #   The URL from where to retrieve the source jar.
 #   Used if install => "source" or "puppi"
 #   Default is from upstream developer site. Update the version when needed.
-#   Can be defined also by the variable $logstash_install_source
+#   Can be defined also by the variable $activemq_install_source
 #
 # [*install_destination*]
 #   The base path where to place the jar.
 #   Used if install => "source" or "puppi"
-#   Can be defined also by the variable $logstash_install_destination
+#   Can be defined also by the variable $activemq_install_destination
 #
 # [*install_dependencies*]
-#   If dependencies from other Example42 modules are used. 
+#   If dependencies from other Example42 modules are used.
 #   Note that these dependencies are needed for an out of the box
 #   setup of the module, but you might want to provide them with
 #   other modules or functions. Default: true.
 #   Set to false if these dependencies interphere with your modules.
+#
+# [*create_user*]
+#   Set to true if you want the module to create the process user of activemq
+#   (as defined in $logstagh::process_user). Default: true
+#   Note: User is not created when $activemq::install is package
 #
 # Standard class parameters
 # Define the general class behaviour and customizations
@@ -238,6 +243,7 @@ class activemq (
   $install_source        = params_lookup('install_source'),
   $install_destination   = params_lookup('install_destination'),
   $install_dependencies = params_lookup( 'install_dependencies' ),
+  $create_user          = params_lookup( 'create_user' ),
   $my_class             = params_lookup( 'my_class' ),
   $source               = params_lookup( 'source' ),
   $source_dir           = params_lookup( 'source_dir' ),
@@ -280,6 +286,7 @@ class activemq (
   $protocol             = params_lookup( 'protocol' )
   ) inherits activemq::params {
 
+  $bool_create_user = any2bool($create_user)
   $bool_install_dependencies =any2bool($install_dependencies )
   $bool_source_dir_purge=any2bool($source_dir_purge)
   $bool_service_autorestart=any2bool($service_autorestart)
