@@ -6,6 +6,27 @@
 # == Parameters
 #
 # Module Specific variables
+# [*install*]
+#   Kind of installation to attempt:
+#     - package : Installs logstash using the OS common packages
+#     - source  : Installs logstash downloading and extracting a specific
+#                 tarball or zip file
+#     - puppi   : Installs logstash tarball or file via Puppi, creating the
+#                 "puppi deploy logstash" command
+#   Can be defined also by the variable $logstash_install
+#
+#
+# [*install_source*]
+#   The URL from where to retrieve the source jar.
+#   Used if install => "source" or "puppi"
+#   Default is from upstream developer site. Update the version when needed.
+#   Can be defined also by the variable $logstash_install_source
+#
+# [*install_destination*]
+#   The base path where to place the jar.
+#   Used if install => "source" or "puppi"
+#   Can be defined also by the variable $logstash_install_destination
+#
 # [*install_dependencies*]
 #   If dependencies from other Example42 modules are used. 
 #   Note that these dependencies are needed for an out of the box
@@ -213,6 +234,9 @@
 #   Alessandro Franceschi <al@lab42.it/>
 #
 class activemq (
+  $install               = params_lookup('install'),
+  $install_source        = params_lookup('install_source'),
+  $install_destination   = params_lookup('install_destination'),
   $install_dependencies = params_lookup( 'install_dependencies' ),
   $my_class             = params_lookup( 'my_class' ),
   $source               = params_lookup( 'source' ),
@@ -338,11 +362,29 @@ class activemq (
     default   => template($activemq::template),
   }
 
-  ### Managed resources
-  package { 'activemq':
-    ensure => $activemq::manage_package,
-    name   => $activemq::package,
+  $real_install_source = $activemq::install_source ? {
+    ''      => "${activemq::params::base_install_source}/${activemq::version}/apache-activemq-${activemq::version}-bin.tar.gz",
+    default => $activemq::install_source,
   }
+
+  $activemq_dir = $activemq::install ? {
+    package => "${activemq::params::data_dir}",
+    default => "${activemq::install_destination}/activemq",
+  }
+
+  $real_config_file = $activemq::install ? {
+    package => $activemq::config_file,
+    default => "${activemq::install_destination}/activemq/conf/activemq.xml",
+  }
+
+  $real_config_dir = $activemq::install ? {
+    package => $activemq::config_dir,
+    default => "${activemq::install_destination}/activemq/conf",
+  }
+
+  ### Managed resources
+  # Installation is managed in a dedicated class
+  require activemq::install
 
   service { 'activemq':
     ensure     => $activemq::manage_service_ensure,
@@ -350,16 +392,16 @@ class activemq (
     enable     => $activemq::manage_service_enable,
     hasstatus  => $activemq::service_status,
     pattern    => $activemq::process,
-    require    => Package['activemq'],
+    require    => Class['activemq::install'],
   }
 
   file { 'activemq.conf':
     ensure  => $activemq::manage_file,
-    path    => $activemq::config_file,
+    path    => $activemq::real_config_file,
     mode    => $activemq::config_file_mode,
     owner   => $activemq::config_file_owner,
     group   => $activemq::config_file_group,
-    require => Package['activemq'],
+    require => Class['activemq::install'],
     notify  => $activemq::manage_service_autorestart,
     source  => $activemq::manage_file_source,
     content => $activemq::manage_file_content,
@@ -371,8 +413,8 @@ class activemq (
   if $activemq::source_dir {
     file { 'activemq.dir':
       ensure  => directory,
-      path    => $activemq::config_dir,
-      require => Package['activemq'],
+      path    => $activemq::real_config_dir,
+      require => Class['activemq::install'],
       notify  => $activemq::manage_service_autorestart,
       source  => $activemq::source_dir,
       recurse => true,
@@ -455,11 +497,13 @@ class activemq (
 
   ### Include OS specific dependencies
   case $::operatingsystem {
-    'ubuntu': { 
-      file { 'activemq_instance_enabled':
-        path    => "${activemq::config_dir}/instances-enabled/main",
-        ensure  => "${activemq::config_dir}/instances-available/main",
-        require => File['activemq.conf'],
+    'ubuntu': {
+      if $activemq::install == 'package' {
+        file { 'activemq_instance_enabled':
+          path    => "${activemq::real_config_dir}/instances-enabled/main",
+          ensure  => "${activemq::real_config_dir}/instances-available/main",
+          require => File['activemq.conf'],
+        }
       }
     }
     default: {}

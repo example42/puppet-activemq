@@ -16,6 +16,10 @@ class activemq::params {
 
   ### Module specific variables
   $install_dependencies = true
+  $install = 'package'
+  $install_source = undef
+  $install_destination = '/opt'
+  $base_install_source = 'http://www.eu.apache.org/dist/activemq/apache-activemq'
 
   ### Application related parameters
 

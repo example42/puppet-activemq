@@ -29,6 +29,14 @@ For RedHat derivatives it requires Example42's yum module (or at least yum/manif
           install_dependencies => false,
         }
 
+* Install activemq directly from upstream site. Must specify the wanted version.
+
+        class { 'activemq':
+          install             => 'source',
+          version             => '5.8.0',
+          install_destination => '/opt',   # Default value
+        }
+
 * Install a specific version of activemq package
 
         class { 'activemq':
