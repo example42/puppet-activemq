@@ -24,4 +24,11 @@ class activemq::dependencies {
     default: {}
   }
 
+  case $activemq::install {
+    'source','puppi': {
+      require java
+    }
+    default: {}
+  }
+
 }
