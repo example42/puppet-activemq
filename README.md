@@ -8,6 +8,8 @@ Official site: http://www.example42.com
 
 Official git repository: http://github.com/example42/puppet-activemq
 
+Module enhancements sponsored by [AllOver.IO](http://www.allover.io)
+
 Released under the terms of Apache 2 License.
 
 This module requires functions provided by the Example42 Puppi module (you need it even if you don't use and install Puppi)
