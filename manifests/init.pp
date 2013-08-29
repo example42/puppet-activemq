@@ -375,7 +375,7 @@ class activemq (
   }
 
   $activemq_dir = $activemq::install ? {
-    package => "${activemq::params::data_dir}",
+    package => $activemq::params::data_dir,
     default => "${activemq::install_destination}/activemq",
   }
 
@@ -507,8 +507,8 @@ class activemq (
     'ubuntu': {
       if $activemq::install == 'package' {
         file { 'activemq_instance_enabled':
-          path    => "${activemq::real_config_dir}/instances-enabled/main",
           ensure  => "${activemq::real_config_dir}/instances-available/main",
+          path    => "${activemq::real_config_dir}/instances-enabled/main",
           require => File['activemq.conf'],
         }
       }
