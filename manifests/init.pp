@@ -370,7 +370,7 @@ class activemq (
   }
 
   $real_install_source = $activemq::install_source ? {
-    ''      => "${activemq::params::base_install_source}/${activemq::version}/apache-activemq-${activemq::version}-bin.tar.gz",
+    ''      => "${activemq::params::base_install_source}/${activemq::version}/apache-activemq-${activemq::version}-bin.zip",
     default => $activemq::install_source,
   }
 
