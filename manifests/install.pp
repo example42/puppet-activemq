@@ -39,7 +39,7 @@ class activemq::install inherits activemq {
         extracted_dir       => $created_file,
         owner               => $activemq::process_user,
         group               => $activemq::process_user,
-        before              => File ['activemq_link'],
+        before              => File['activemq_link'],
       }
 
       file { 'activemq_link':
@@ -71,7 +71,7 @@ class activemq::install inherits activemq {
         check_deploy             => false,
         run_checks               => false,
         enable                   => true,
-        before                   => File ['activemq_link'],
+        before                   => File['activemq_link'],
       }
 
       file { 'activemq_link':
