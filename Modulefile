@@ -1,9 +1,9 @@
 name 'example42-activemq'
-version '2.0.14'
+version '2.0.15'
 
 author 'Alessandro Franceschi'
 license 'Apache2'
-project_page 'http://www.example42.com'
+project_page 'https://github.com/example42/puppet-activemq'
 source 'https://github.com/example42/puppet-activemq'
 summary 'Puppet module for activemq'
 description 'This module installs and manages activemq. Check README.rdoc for details. Puppi is required for some common functions: you can install them without using the whole module. Monitor and firewall dependencies are needed only if the relevant features are enabled'

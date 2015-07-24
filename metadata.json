@@ -1,0 +1,77 @@
+{
+  "name": "example42-activemq",
+  "version": "2.0.15",
+  "summary": "Puppet module for activemq",
+  "license": "Apache-2.0",
+  "author": "Alessandro Franceschi",
+  "types": [
+
+  ],
+  "checksums": {
+  },
+  "source": "https://github.com/example42/puppet-activemq",
+  "project_page": "https://github.com/example42/puppet-activemq",
+  "issues_url": "https://github.com/example42/puppet-activemq/issues",
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "Centos",
+      "operatingsystemrelease": [
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": [
+        "14.04"
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "name": "pe",
+      "version_requirement": "3.x"
+    },
+    {
+      "name": "puppet",
+      "version_requirement": ">= 3.0.0"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">= 3.2.0 < 5.0.0"
+    },
+    {
+      "name": "example42/puppi",
+      "version_requirement": ">= 2.0.0"
+    },
+    {
+      "name": "example42/monitor",
+      "version_requirement": ">= 2.0.0"
+    },
+    {
+      "name": "example42/yum",
+      "version_requirement": ">= 2.0.0"
+    },
+    {
+      "name": "example42/firewall",
+      "version_requirement": ">= 2.0.0"
+    },
+    {
+      "name": "example42/java",
+      "version_requirement": ">= 2.0.0"
+    }
+  ]
+}
