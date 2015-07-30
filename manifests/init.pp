@@ -300,195 +300,196 @@ class activemq (
   $bool_audit_only=any2bool($audit_only)
 
   ### Definition of some variables used in the module
-  $manage_package = $activemq::bool_absent ? {
+  $manage_package = $bool_absent ? {
     true  => 'absent',
-    false => $activemq::version,
+    false => $version,
   }
 
-  $manage_service_enable = $activemq::bool_disableboot ? {
+  $manage_service_enable = $bool_disableboot ? {
     true    => false,
-    default => $activemq::bool_disable ? {
+    default => $bool_disable ? {
       true    => false,
-      default => $activemq::bool_absent ? {
+      default => $bool_absent ? {
         true  => false,
         false => true,
       },
     },
   }
 
-  $manage_service_ensure = $activemq::bool_disable ? {
+  $manage_service_ensure = $bool_disable ? {
     true    => 'stopped',
-    default =>  $activemq::bool_absent ? {
+    default =>  $bool_absent ? {
       true    => 'stopped',
       default => 'running',
     },
   }
 
-  $manage_service_autorestart = $activemq::bool_service_autorestart ? {
+  $manage_service_autorestart = $bool_service_autorestart ? {
     true    => Service[activemq],
     false   => undef,
   }
 
-  $manage_file = $activemq::bool_absent ? {
+  $manage_file = $bool_absent ? {
     true    => 'absent',
     default => 'present',
   }
 
-  if $activemq::bool_absent == true
-  or $activemq::bool_disable == true
-  or $activemq::bool_disableboot == true {
+  if $bool_absent == true
+  or $bool_disable == true
+  or $bool_disableboot == true {
     $manage_monitor = false
   } else {
     $manage_monitor = true
   }
 
-  if $activemq::bool_absent == true
-  or $activemq::bool_disable == true {
+  if $bool_absent == true
+  or $bool_disable == true {
     $manage_firewall = false
   } else {
     $manage_firewall = true
   }
 
-  $manage_audit = $activemq::bool_audit_only ? {
+  $manage_audit = $bool_audit_only ? {
     true  => 'all',
     false => undef,
   }
 
-  $manage_file_replace = $activemq::bool_audit_only ? {
+  $manage_file_replace = $bool_audit_only ? {
     true  => false,
     false => true,
   }
 
-  $manage_file_source = $activemq::source ? {
+  $manage_file_source = $source ? {
     ''        => undef,
-    default   => $activemq::source,
+    default   => $source,
   }
 
-  $manage_file_content = $activemq::template ? {
+  $manage_file_content = $template ? {
     ''        => undef,
-    default   => template($activemq::template),
+    default   => template($template),
   }
 
-  $real_install_source = $activemq::install_source ? {
-    ''      => "${activemq::params::base_install_source}/${activemq::version}/apache-activemq-${activemq::version}-bin.zip",
-    default => $activemq::install_source,
+  $base_install_source = $activemq::params::base_install_source
+  $real_install_source = $install_source ? {
+    ''      => "${base_install_source}/${version}/apache-activemq-${version}-bin.zip",
+    default => $install_source,
   }
 
-  $activemq_dir = $activemq::install ? {
+  $activemq_dir = $install ? {
     package => $activemq::params::data_dir,
-    default => "${activemq::install_destination}/activemq",
+    default => "${install_destination}/activemq",
   }
 
-  $real_config_file = $activemq::install ? {
-    package => $activemq::config_file,
-    default => "${activemq::install_destination}/activemq/conf/activemq.xml",
+  $real_config_file = $install ? {
+    package => $config_file,
+    default => "${install_destination}/activemq/conf/activemq.xml",
   }
 
-  $real_config_dir = $activemq::install ? {
-    package => $activemq::config_dir,
-    default => "${activemq::install_destination}/activemq/conf",
+  $real_config_dir = $install ? {
+    package => $config_dir,
+    default => "${install_destination}/activemq/conf",
   }
 
   ### Managed resources
   # Installation is managed in a dedicated class
-  require activemq::install
+  require(activemq::install)
 
   service { 'activemq':
-    ensure     => $activemq::manage_service_ensure,
-    name       => $activemq::service,
-    enable     => $activemq::manage_service_enable,
-    hasstatus  => $activemq::service_status,
-    pattern    => $activemq::process,
+    ensure     => $manage_service_ensure,
+    name       => $service,
+    enable     => $manage_service_enable,
+    hasstatus  => $service_status,
+    pattern    => $process,
     require    => Class['activemq::install'],
   }
 
   file { 'activemq.conf':
-    ensure  => $activemq::manage_file,
-    path    => $activemq::real_config_file,
-    mode    => $activemq::config_file_mode,
-    owner   => $activemq::config_file_owner,
-    group   => $activemq::config_file_group,
+    ensure  => $manage_file,
+    path    => $real_config_file,
+    mode    => $config_file_mode,
+    owner   => $config_file_owner,
+    group   => $config_file_group,
     require => Class['activemq::install'],
-    notify  => $activemq::manage_service_autorestart,
-    source  => $activemq::manage_file_source,
-    content => $activemq::manage_file_content,
-    replace => $activemq::manage_file_replace,
-    audit   => $activemq::manage_audit,
+    notify  => $manage_service_autorestart,
+    source  => $manage_file_source,
+    content => $manage_file_content,
+    replace => $manage_file_replace,
+    audit   => $manage_audit,
   }
 
   # The whole activemq configuration directory can be recursively overriden
-  if $activemq::source_dir {
+  if $source_dir {
     file { 'activemq.dir':
       ensure  => directory,
-      path    => $activemq::real_config_dir,
+      path    => $real_config_dir,
       require => Class['activemq::install'],
-      notify  => $activemq::manage_service_autorestart,
-      source  => $activemq::source_dir,
+      notify  => $manage_service_autorestart,
+      source  => $source_dir,
       recurse => true,
-      purge   => $activemq::bool_source_dir_purge,
-      replace => $activemq::manage_file_replace,
-      audit   => $activemq::manage_audit,
+      purge   => $bool_source_dir_purge,
+      replace => $manage_file_replace,
+      audit   => $manage_audit,
     }
   }
 
 
   ### Include custom class if $my_class is set
-  if $activemq::my_class {
-    include $activemq::my_class
+  if $my_class {
+    include $my_class
   }
 
 
   ### Provide puppi data, if enabled ( puppi => true )
-  if $activemq::bool_puppi == true {
+  if $bool_puppi == true {
     $classvars=get_class_args()
     puppi::ze { 'activemq':
-      ensure    => $activemq::manage_file,
+      ensure    => $manage_file,
       variables => $classvars,
-      helper    => $activemq::puppi_helper,
+      helper    => $puppi_helper,
     }
   }
 
 
   ### Service monitoring, if enabled ( monitor => true )
-  if $activemq::bool_monitor == true {
-    monitor::port { "activemq_${activemq::protocol}_${activemq::port}":
-      protocol => $activemq::protocol,
-      port     => $activemq::port,
-      target   => $activemq::monitor_target,
-      tool     => $activemq::monitor_tool,
-      enable   => $activemq::manage_monitor,
+  if $bool_monitor == true {
+    monitor::port { "activemq_${protocol}_${port}":
+      protocol => $protocol,
+      port     => $port,
+      target   => $monitor_target,
+      tool     => $monitor_tool,
+      enable   => $manage_monitor,
     }
     monitor::process { 'activemq_process':
-      process  => $activemq::process,
-      service  => $activemq::service,
-      pidfile  => $activemq::pid_file,
-      user     => $activemq::process_user,
-      argument => $activemq::process_args,
-      tool     => $activemq::monitor_tool,
-      enable   => $activemq::manage_monitor,
+      process  => $process,
+      service  => $service,
+      pidfile  => $pid_file,
+      user     => $process_user,
+      argument => $process_args,
+      tool     => $monitor_tool,
+      enable   => $manage_monitor,
     }
   }
 
 
   ### Firewall management, if enabled ( firewall => true )
-  if $activemq::bool_firewall == true {
-    firewall { "activemq_${activemq::protocol}_${activemq::port}":
-      source      => $activemq::firewall_src,
-      destination => $activemq::firewall_dst,
-      protocol    => $activemq::protocol,
-      port        => $activemq::port,
+  if $bool_firewall == true {
+    firewall { "activemq_${protocol}_${port}":
+      source      => $firewall_src,
+      destination => $firewall_dst,
+      protocol    => $protocol,
+      port        => $port,
       action      => 'allow',
       direction   => 'input',
-      tool        => $activemq::firewall_tool,
-      enable      => $activemq::manage_firewall,
+      tool        => $firewall_tool,
+      enable      => $manage_firewall,
     }
   }
 
 
   ### Debugging, if enabled ( debug => true )
-  if $activemq::bool_debug == true {
+  if $bool_debug == true {
     file { 'debug_activemq':
-      ensure  => $activemq::manage_file,
+      ensure  => $manage_file,
       path    => "${settings::vardir}/debug-activemq",
       mode    => '0640',
       owner   => 'root',
@@ -505,10 +506,10 @@ class activemq (
   ### Include OS specific dependencies
   case $::operatingsystem {
     'ubuntu': {
-      if $activemq::install == 'package' {
+      if $install == 'package' {
         file { 'activemq_instance_enabled':
-          ensure  => "${activemq::real_config_dir}/instances-available/main",
-          path    => "${activemq::real_config_dir}/instances-enabled/main",
+          ensure  => "${real_config_dir}/instances-available/main",
+          path    => "${real_config_dir}/instances-enabled/main",
           require => File['activemq.conf'],
         }
       }
