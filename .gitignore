@@ -8,3 +8,6 @@ spec/fixtures
 *.un~
 vendor
 .bundle
+.gemfile.lock
+Gemfile
+
