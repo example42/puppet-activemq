@@ -6,6 +6,7 @@ describe 'activemq' do
   let(:node) { 'rspec.example42.com' }
   let(:facts) { {
       :ipaddress => '10.42.42.42',
+      :operatingsystem => 'CentOS',
       :operatingsystemrelease => '10.10',
       :fqdn => 'rspec.example42.com'
   } }

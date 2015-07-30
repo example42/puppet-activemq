@@ -5,8 +5,8 @@ rvm:
 script:
   - "rake spec SPEC_OPTS='--format documentation'"
 env:
-  - PUPPET_VERSION="~> 3.0.0"
   - PUPPET_VERSION="~> 3.1.0"
+  - PUPPET_VERSION="~> 3.3.0"
   - PUPPET_VERSION="~> 3.6.0"
 
 gemfile: .gemfile
