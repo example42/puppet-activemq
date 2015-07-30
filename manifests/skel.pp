@@ -10,9 +10,9 @@
 class activemq::skel inherits activemq {
 
   file { '/etc/activemq':
-    ensure  => directory,
-    owner   => $activemq::process_user,
-    group   => $activemq::process_group,
-    audit   => $activemq::manage_audit,
+    ensure => directory,
+    owner  => $activemq::process_user,
+    group  => $activemq::process_group,
+    audit  => $activemq::manage_audit,
   }
 }

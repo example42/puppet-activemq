@@ -395,12 +395,12 @@ class activemq (
   require(activemq::install)
 
   service { 'activemq':
-    ensure     => $manage_service_ensure,
-    name       => $service,
-    enable     => $manage_service_enable,
-    hasstatus  => $service_status,
-    pattern    => $process,
-    require    => Class['activemq::install'],
+    ensure    => $manage_service_ensure,
+    name      => $service,
+    enable    => $manage_service_enable,
+    hasstatus => $service_status,
+    pattern   => $process,
+    require   => Class['activemq::install'],
   }
 
   file { 'activemq.conf':

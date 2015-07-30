@@ -32,14 +32,12 @@ class activemq::install inherits activemq {
       include activemq::skel
 
       puppi::netinstall { 'netinstall_activemq':
-        url                 => $activemq::real_install_source,
-        destination_dir     => $activemq::install_destination,
-        # extract_command     => 'tar -zxf',
-        # preextract_command  => $activemq::install_precommand,
-        extracted_dir       => $created_file,
-        owner               => $activemq::process_user,
-        group               => $activemq::process_user,
-        before              => File['activemq_link'],
+        url             => $activemq::real_install_source,
+        destination_dir => $activemq::install_destination,
+        extracted_dir   => $created_file,
+        owner           => $activemq::process_user,
+        group           => $activemq::process_user,
+        before          => File['activemq_link'],
       }
 
       file { 'activemq_link':
@@ -63,15 +61,15 @@ class activemq::install inherits activemq {
       include activemq::skel
 
       puppi::project::tar { 'activemq':
-        source                   => $activemq::real_install_source,
-        deploy_root              => $activemq::install_destination,
-        report_email             => 'root',
-        user                     => $activemq::process_user,
-        auto_deploy              => true,
-        check_deploy             => false,
-        run_checks               => false,
-        enable                   => true,
-        before                   => File['activemq_link'],
+        source       => $activemq::real_install_source,
+        deploy_root  => $activemq::install_destination,
+        report_email => 'root',
+        user         => $activemq::process_user,
+        auto_deploy  => true,
+        check_deploy => false,
+        run_checks   => false,
+        enable       => true,
+        before       => File['activemq_link'],
       }
 
       file { 'activemq_link':
