@@ -8,4 +8,3 @@ spec/fixtures
 *.un~
 vendor
 .bundle
-Gemfile.lock
