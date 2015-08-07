@@ -11,6 +11,14 @@ env:
   - PUPPET_VERSION="~> 3.3.0"
   - PUPPET_VERSION="~> 3.6.0"
   - PUPPET_VERSION="~> 4.2"
+matrix:
+  exclude:
+    - rvm: 1.8.7
+      env: PUPPET_VERSION="~> 4.2"
+    - rvm: 2.1.4
+      env: PUPPET_VERSION="~> 3.1.0"
+    - rvm: 2.1.4
+      env: PUPPET_VERSION="~> 3.3.0"
 
 gemfile: .gemfile
 sudo: false
