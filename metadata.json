@@ -1,6 +1,6 @@
 {
   "name": "example42-activemq",
-  "version": "2.0.16",
+  "version": "2.0.17",
   "summary": "Puppet module for activemq",
   "license": "Apache-2.0",
   "author": "Alessandro Franceschi",
@@ -58,15 +58,7 @@
       "version_requirement": ">= 2.0.0"
     },
     {
-      "name": "example42/monitor",
-      "version_requirement": ">= 2.0.0"
-    },
-    {
       "name": "example42/yum",
-      "version_requirement": ">= 2.0.0"
-    },
-    {
-      "name": "example42/firewall",
       "version_requirement": ">= 2.0.0"
     },
     {
