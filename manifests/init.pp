@@ -418,7 +418,7 @@ class activemq (
   }
 
   # The whole activemq configuration directory can be recursively overriden
-  if $source_dir {
+  if $source_dir and $source_dir != '' {
     file { 'activemq.dir':
       ensure  => directory,
       path    => $real_config_dir,
@@ -434,7 +434,7 @@ class activemq (
 
 
   ### Include custom class if $my_class is set
-  if $my_class {
+  if $my_class and $my_class != '' {
     include $my_class
   }
 
